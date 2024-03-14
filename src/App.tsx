@@ -17,7 +17,7 @@ function App() {
         <Route
           path="/weather"
           element={
-            <div style={{ width: "300px" }}>
+            <div style={{ width: "340px" }}>
               <AuthHeader />
               <Search />
               <WeatherList />
