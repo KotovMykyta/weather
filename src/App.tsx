@@ -7,6 +7,7 @@ function App() {
   const [count, setCount] = useState(0);
 
   const key = import.meta.env.VITE_FIREBASE_API_KEY;
+  const anotherKey = import.meta.env.VITE_OPENWEATHERMAP_API_KEY;
 
   return (
     <>
@@ -20,6 +21,7 @@ function App() {
       </div>
       <h1>Weather</h1>
       <h2>KEY: {key}</h2>
+      <h2>KEY 2: {anotherKey}</h2>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
