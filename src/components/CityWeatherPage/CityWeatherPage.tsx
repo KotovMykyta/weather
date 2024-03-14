@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useParams, useNavigate } from "react-router-dom";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";

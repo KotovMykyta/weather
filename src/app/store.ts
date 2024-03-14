@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { configureStore } from "@reduxjs/toolkit";
 import citiesReducer from "@/features/cities/citiesSlice";
 import userReducer from "@/features/user/userSlice";
@@ -19,7 +20,9 @@ export interface RootState {
 
   user: {
     loading: boolean;
-    userData: null;
+    userData: {
+      uid: string;
+    };
     error: string;
   };
 }

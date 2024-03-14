@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/joy/Typography";

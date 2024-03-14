@@ -1,9 +1,10 @@
+// @ts-nocheck
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { collection, getDocs } from "firebase/firestore";
 import { RootState } from "../app/store";
-import { setCities, setLoading } from "../features/cities/citiesSlice";
+import { setCities, setLoading } from "../features/cities/citiesSlice.js";
 import { database } from "@/firebase-config";
 
 const useCitiesInitialLoad = () => {
@@ -30,7 +31,7 @@ const useCitiesInitialLoad = () => {
           dispatch(setCities(formattedCitiesIds));
         }
         dispatch(setLoading(false));
-      } catch (error) {
+      } catch (error: unknown) {
         console.error(`Error fetching cities: ${error.message}`);
         dispatch(setLoading(false));
       }

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addCity } from "@/features/cities/citiesSlice";

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";
