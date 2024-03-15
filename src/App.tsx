@@ -5,11 +5,13 @@ import Search from "./components/Search";
 import WeatherList from "./components/WeatherList";
 import CityWeatherPage from "./components/CityWeatherPage";
 import useCitiesUpdate from "./hooks/useCitiesUpdate";
+import useUserCitiesInitialLoad from "./hooks/useUserCitiesInitialLoad";
 import useCitiesInitialLoad from "./hooks/useCitiesInitialLoad";
 
 function App() {
   useCitiesUpdate();
-  useCitiesInitialLoad();
+  useUserCitiesInitialLoad();
+  const { weatherListData, updateCityWeather } = useCitiesInitialLoad();
 
   return (
     <Router>
@@ -20,7 +22,10 @@ function App() {
             <div style={{ width: "342px" }}>
               <AuthHeader />
               <Search />
-              <WeatherList />
+              <WeatherList
+                weatherListData={weatherListData}
+                updateCityWeather={updateCityWeather}
+              />
             </div>
           }
         />

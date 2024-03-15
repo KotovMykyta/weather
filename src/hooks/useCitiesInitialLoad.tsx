@@ -1,46 +1,56 @@
 // @ts-nocheck
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { collection, getDocs } from "firebase/firestore";
-import { RootState } from "../app/store";
-import { setCities, setLoading } from "../features/cities/citiesSlice.js";
-import { database } from "@/firebase-config";
+import { RootState } from "@/app/store.js";
+import { api } from "@/weather-api.ts";
+
+export type WeatherData = {
+  id: number;
+  name: string;
+  dt: number;
+  main: {
+    temp: number;
+    temp_min: number;
+    temp_max: number;
+  };
+  sys: {
+    country: string;
+    timezone: number;
+  };
+};
 
 const useCitiesInitialLoad = () => {
-  const dispatch = useDispatch();
-  const userUid = useSelector((state: RootState) => state.user.userData?.uid);
-  const value = collection(database, "citiesIds");
+  const cities = useSelector((state: RootState) => state.cities.citiesIds);
+  const cityIds = cities.map((city) => encodeURIComponent(city)).join(",");
+
+  const [weatherListData, setWeatherListData] = useState<WeatherData[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      dispatch(setLoading(true));
-      try {
-        const querySnapshot = await getDocs(value);
-        const citiesIds = querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        const userCitiesIds = citiesIds.find(
-          (citiesId) => citiesId.id === userUid
+    fetch(`${api.base}group?id=${cityIds}&units=metric&appid=${api.key}`)
+      .then((res) => res.json())
+      .then((result) => {
+        setWeatherListData(result.list);
+      });
+  }, [cityIds]);
+
+  const updateCityWeather = (city: string) => {
+    fetch(`${api.base}weather?q=${city}&units=metric&appid=${api.key}`)
+      .then((res) => res.json())
+      .then((result) => {
+        setWeatherListData((prev) =>
+          prev.map((item) => {
+            if (item.name === city) {
+              item.main.temp = result.main.temp;
+              item.main.temp_max = result.main.temp_max;
+              item.main.temp_min = result.main.temp_min;
+              item.dt = result.dt;
+            }
+            return item;
+          })
         );
-        if (userCitiesIds?.citiesIds) {
-          const formattedCitiesIds = userCitiesIds.citiesIds
-            .split(",")
-            .map(Number);
-          dispatch(setCities(formattedCitiesIds));
-        }
-        dispatch(setLoading(false));
-      } catch (error: unknown) {
-        console.error(`Error fetching cities: ${error.message}`);
-        dispatch(setLoading(false));
-      }
-    };
-
-    if (userUid) fetchData();
-  }, [dispatch, userUid]);
-
-  return null;
+      });
+  };
+  return { weatherListData, updateCityWeather };
 };
 
 export default useCitiesInitialLoad;

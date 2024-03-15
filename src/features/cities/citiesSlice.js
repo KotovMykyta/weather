@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   loading: false,
-  citiesIds: [698740,689558,712250],
+  citiesIds: [5815135,2643743,698740,689558,2988507],
   error: "",
   loaded: false,
 };

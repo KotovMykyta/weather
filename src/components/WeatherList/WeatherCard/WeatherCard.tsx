@@ -4,6 +4,7 @@ import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/joy/Typography";
 import { useNavigate } from "react-router-dom";
 import { IoRefreshSharp } from "react-icons/io5";
+import { formatTime } from "./utils";
 
 type WeatherCardProps = {
   city: string;
@@ -12,6 +13,9 @@ type WeatherCardProps = {
   tempMax: number;
   country: string;
   cityId: number;
+  timestamp: number;
+  offset: number;
+  updateCityWeather: (city: string) => void;
 };
 
 const WeatherCard = ({
@@ -21,6 +25,9 @@ const WeatherCard = ({
   tempMax,
   country,
   cityId,
+  timestamp,
+  offset,
+  updateCityWeather,
 }: WeatherCardProps) => {
   const navigate = useNavigate();
 
@@ -30,9 +37,16 @@ const WeatherCard = ({
     });
   };
 
-  const handleChildClick = (event: React.MouseEvent<SVGElement>) => {
+  const handleChildClick = (
+    city: string,
+    event: React.MouseEvent<SVGElement>
+  ) => {
     event.stopPropagation();
+    updateCityWeather(city);
   };
+
+  const cityTime = new Date(timestamp * 1000 + offset * 1000);
+  const fullCityTime = formatTime(cityTime);
 
   return (
     <Card style={{ margin: "10px 0", cursor: "pointer" }} onClick={handleClick}>
@@ -56,13 +70,23 @@ const WeatherCard = ({
           component="p"
           style={{
             position: "absolute",
+            right: "120px",
+          }}
+        >
+          {fullCityTime}
+        </Typography>
+        <Typography
+          variant="body2"
+          component="p"
+          style={{
+            position: "absolute",
             right: "60px",
           }}
         >
           {temp}°C
         </Typography>
         <IoRefreshSharp
-          onClick={handleChildClick}
+          onClick={(event) => handleChildClick(city, event)}
           style={{ cursor: "pointer", fontSize: "20px" }}
         />
       </CardContent>

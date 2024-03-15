@@ -1,37 +1,16 @@
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import WeatherCard from "./WeatherCard";
-import { api } from "@/weather-api.ts";
+import { WeatherData } from "@/hooks/useCitiesInitialLoad";
 
-type WeatherData = {
-  id: number;
-  name: string;
-  main: {
-    temp: number;
-    temp_min: number;
-    temp_max: number;
-  };
-  sys: {
-    country: string;
-  };
-};
-
-const WeatherList = () => {
-  const cities = useSelector((state: RootState) => state.cities.citiesIds);
+const WeatherList = ({
+  weatherListData,
+  updateCityWeather,
+}: {
+  weatherListData: WeatherData[];
+  updateCityWeather: (city: string) => void;
+}) => {
   const loadingCities = useSelector((state: RootState) => state.cities.loading);
-  const cityIds = cities.map((city) => encodeURIComponent(city)).join(",");
-
-  const [weatherListData, setWeatherListData] = useState<WeatherData[]>([]);
-  // console.log("weatherListData: ", weatherListData);
-
-  useEffect(() => {
-    fetch(`${api.base}group?id=${cityIds}&units=metric&appid=${api.key}`)
-      .then((res) => res.json())
-      .then((result) => {
-        setWeatherListData(result.list);
-      });
-  }, [cityIds]);
 
   return (
     <div>
@@ -47,6 +26,9 @@ const WeatherList = () => {
             tempMax={city.main.temp_max}
             country={city.sys.country}
             cityId={city.id}
+            timestamp={city.dt}
+            offset={city.sys.timezone}
+            updateCityWeather={updateCityWeather}
           />
         ))
       ) : (
