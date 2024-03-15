@@ -70,7 +70,7 @@ const WeatherCard = ({
           component="p"
           style={{
             position: "absolute",
-            right: "120px",
+            right: "130px",
           }}
         >
           {fullCityTime}
